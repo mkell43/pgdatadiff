@@ -1,6 +1,6 @@
 """
 Usage:
-  pgdatadiff --firstdb=<firstconnectionstring> --seconddb=<secondconnectionstring> [--only-data|--only-sequences] [--count-only] [--chunk-size=<size>]
+  pgdatadiff --firstdb=<firstconnectionstring> --seconddb=<secondconnectionstring> [--schema=<schema_name>] [--only-data|--only-sequences] [--count-only] [--chunk-size=<size>]
   pgdatadiff --version
 
 Options:
@@ -8,6 +8,7 @@ Options:
   --version          Show version.
   --firstdb=postgres://postgres:password@localhost/firstdb        The connection string of the first DB
   --seconddb=postgres://postgres:password@localhost/seconddb         The connection string of the second DB
+  --schema=public    Database schema to compare [default: public]
   --only-data        Only compare data, exclude sequences
   --only-sequences   Only compare seqences, exclude data
   --count-only       Do a quick test based on counts alone
@@ -15,10 +16,10 @@ Options:
 """
 
 import pkg_resources
+from docopt import docopt
 from fabulous.color import red
 
 from pgdatadiff.pgdatadiff import DBDiff
-from docopt import docopt
 
 
 def main():
@@ -31,9 +32,13 @@ def main():
         print(red("Only Postgres DBs are supported"))
         return 1
 
-    differ = DBDiff(first_db_connection_string, second_db_connection_string,
-                    chunk_size=arguments['--chunk-size'],
-                    count_only=arguments['--count-only'])
+    differ = DBDiff(
+        first_db_connection_string,
+        second_db_connection_string,
+        schema=arguments["--schema"],
+        chunk_size=arguments["--chunk-size"],
+        count_only=arguments["--count-only"],
+    )
 
     if not arguments['--only-sequences']:
         if differ.diff_all_table_data():
