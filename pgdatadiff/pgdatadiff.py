@@ -61,7 +61,7 @@ class DBDiff(object):
         SELECT md5(array_agg(md5((t.*)::varchar))::varchar)
         FROM (
                 SELECT *
-                FROM {tablename}
+                FROM {self.schema}.{tablename}
                 ORDER BY {pk} limit :row_limit offset :row_offset
             ) AS t;
                         """
@@ -90,7 +90,7 @@ class DBDiff(object):
                 self.firstsession.execute(GET_SEQUENCES_SQL).fetchall()]
 
     def diff_sequence(self, seq_name):
-        GET_SEQUENCES_VALUE_SQL = f"SELECT last_value FROM {seq_name};"
+        GET_SEQUENCES_VALUE_SQL = f"SELECT last_value FROM {self.schema}.{seq_name};"
 
         try:
             firstvalue = \
