@@ -40,10 +40,8 @@ def main():
         count_only=arguments["--count-only"],
     )
 
-    if not arguments['--only-sequences']:
-        if differ.diff_all_table_data():
-            return 1
-    if not arguments['--only-data']:
-        if differ.diff_all_sequences():
-            return 1
+    if not arguments['--only-sequences'] and differ.diff_all_table_data():
+        return 1
+    if not arguments['--only-data'] and differ.diff_all_sequences():
+        return 1
     return 0
