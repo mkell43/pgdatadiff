@@ -17,7 +17,7 @@ jobs:
       run: |
         python setup.py sdist
     - name: Publish to Docker
-      uses: elgohr/Publish-Docker-Github-Action@master
+      uses: elgohr/Publish-Docker-Github-Action@v5
       with:
         name: mkell43/pgdatadiff
         username: ${{ secrets.DOCKER_USERNAME }}
